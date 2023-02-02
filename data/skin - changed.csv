@@ -1,4 +1,4 @@
-name,code,characterCode,index,grade,purchaseType,effectsPath,projectilesPath,objectPath,fxSoundPath,voicePath,weaponMountPath,weaponMountCommonPath,indicatorPath,projectilesDeflectorPath
+﻿name,code,characterCode,index,grade,purchaseType,effectsPath,projectilesPath,objectPath,fxSoundPath,voicePath,weaponMountPath,weaponMountCommonPath,indicatorPath,projectilesDeflectorPath
 재키,1001000,1,0,1,FREE,Effects/Jackie/S000,Projectiles/Jackie/S000,,Sound/FX/Jackie/S000,Sound/VOICE/Jackie/S000,Weapons/Jackie/S000,Weapons/Common/C000,,
 처형자 재키,1001001,1,1,2,SHOP,Effects/Jackie/S000,Projectiles/Jackie/S000,,Sound/FX/Jackie/S000,Sound/VOICE/Jackie/S000,Weapons/Jackie/S001,Weapons/Common/C000,,
 스칼렛 코사지 재키,1001002,1,2,3,SHOP,Effects/Jackie/S002,Projectiles/Jackie/S000,,Sound/FX/Jackie/S002,Sound/VOICE/Jackie/S002,Weapons/Jackie/S002,Weapons/Common/C000,,
@@ -166,7 +166,7 @@ William,1032002,32,2,3,SHOP,Effects/William/S000,Projectiles/William/S000,Object
 블랙스완 엘레나,1050001,50,1,3,SHOP,Effects/Elena/S001,Projectiles/Elena/S001,Object/Elena/S001,Sound/FX/Elena/S000,Sound/VOICE/Elena/S000,Weapons/Elena/S001,Weapons/Common/C000,,
 한겨울 엘레나,1050002,50,2,3,SHOP,Effects/Elena/S002,Projectiles/Elena/S002,Object/Elena/S002,Sound/FX/Elena/S000,Sound/VOICE/Elena/S000,Weapons/Elena/S002,Weapons/Common/C000,,
 프리야,1051000,51,0,1,FREE,Effects/Priya/S000,Projectiles/Priya/S000,Object/Priya/S000,Sound/FX/Priya/S000,Sound/VOICE/Priya/S000,Weapons/Priya/S000,Weapons/Common/C000,Indicator/Priya/S000,
-영원이 꽃 프리야,1051001,51,1,3,SHOP,Effects/Priya/S001,Projectiles/Priya/S001,Object/Priya/S001,Sound/FX/Priya/S001,Sound/VOICE/Priya/S000,Weapons/Priya/S001,Weapons/Common/C000,Indicator/Priya/S001,
+영원의 꽃 프리야,1051001,51,1,3,SHOP,Effects/Priya/S001,Projectiles/Priya/S001,Object/Priya/S001,Sound/FX/Priya/S001,Sound/VOICE/Priya/S000,Weapons/Priya/S001,Weapons/Common/C000,Indicator/Priya/S001,
 아디나,1052000,52,0,1,FREE,Effects/Adina/S000,Projectiles/Adina/S000,Object/Adina/S000,Sound/FX/Adina/S000,Sound/VOICE/Adina/S000,Weapons/Adina/S000,Weapons/Common/C000,,
 운명의 아르카나 아디나,1052001,52,1,3,SHOP,Effects/Adina/S001,Projectiles/Adina/S001,Object/Adina/S000,Sound/FX/Adina/S000,Sound/VOICE/Adina/S000,Weapons/Adina/S001,Weapons/Common/C000,,
 마커스,1053000,53,0,1,FREE,Effects/Markus/S000,Projectiles/Markus/S000,Object/Markus/S000,Sound/FX/Markus/S000,Sound/VOICE/Markus/S000,Weapons/Markus/S000,Weapons/Common/C000,,
