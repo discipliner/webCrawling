@@ -1,8 +1,6 @@
-"""Welcome to Pynecone! This file outlines the steps to create a basic app."""
 from pcconfig import config
 
 import pynecone as pc
-
 
 # !/usr/bin/env python
 # coding: utf-8
@@ -166,11 +164,49 @@ for i, char in df_characterStats.iterrows():
     xy = pd.concat([xy, json_normalize(json.loads(
         f'{"{"}"characterCode" : {characterList[characterList.nameW == char.characterName].code.values[0]} ,"characterName" : "{characterList[characterList.nameW == char.characterName].nameW.values[0]}" ,"pickRate" : {df_characterStats.totalGames[i] / 19247 * 100:.2f}, "mmrGain" : {df_characterStats.averageMMR[i]:.2f}{"}"}'))])
 
+# 스타일 정의
+style = {
+    "font_family": "D2Coding",
+    "font_size": "16px",
+    pc.Center: {
+        "padding_top": "10%",
+    },
+    pc.Vstack: {
+        "spacing": "1.5em",
+        "font_size": "2em",
+    },
+    pc.Heading: {
+        "font_size": "2em",
+    },
+    pc.Link: {
+        "padding": "0.5em",
+        "border": "0.1em solid",
+        "border_radius": "1em",
+        "box_sizing": "border-box",
+        "color": "white",
+        "_hover": {
+            "color": "rgb(107,99,246)",
+            "opacity": 0.85,
+        },
+    },
+    pc.Button: {
+        "border": "0.1em solid",
+        "border_radius": "1em",
+        "box_sizing": "border-box",
+        "padding": "0.5em",
+        "color": "white",
+        "_hover": {
+            "color": "rgb(107,99,246)",
+            "opacity": 0.85
+        },
+    }
+}
 
+
+# State 클래스 정의
 class State(pc.State):
-    """The app state."""
 
-    def analysis(self):
+    def detail(self):
         print('analysis() 실행')
         plt.figure(figsize=(10, 6))
         plt.xlabel('픽률', fontsize=20)
@@ -194,54 +230,44 @@ def index():
     print('index() 실행')
     return pc.center(
         pc.vstack(
-            pc.heading("ER 웹 크롤링 및 데이터 분석", font_size="2em"),
+            pc.heading("ER 웹 크롤링 및 데이터 분석"),
             # pc.box("Progress: editing ", pc.code(filename, font_size="1em")),
-            # pc.image(src='/thief.png'),
+            pc.image(src='/thief.png'),
             pc.link(
                 "Start",
                 href='/squad',
-                border="0.1em solid",
-                padding="0.5em",
-                border_radius="0.5em",
-                _hover={
-                    "color": "rgb(107,99,246)",
-                },
+                box_shadow="rgba(151, 65, 252, 0.8) 0 15px 30px -10px",
+                background_image="linear-gradient(144deg,#AF40FF,#5B42F3 50%,#00DDEB)",
             ),
-            spacing="1.5em",
-            font_size="2em",
         ),
-        padding_top="10%",
     )
+
 
 # 스쿼드 사분면 페이지
 def squad():
     print('squad() 실행')
     return pc.center(
         pc.vstack(
-            pc.heading("Season8 스쿼드(랭크) 사분면", font_size="2em"),
-            pc.box("Progress: editing ", pc.code(filename, font_size="1em")),
-            pc.button(
-                "Analysis",
-                href='#',
-                border="0.1em solid",
-                border_radius="1em",
-                padding="0.5em",
-                _hover={
-                    "color": "rgb(107,99,246)",
-                    "opacity": 0.85
-                },
-                on_click=State.analysis,
+            pc.heading("Season8 스쿼드(랭크) 사분면"),
+            pc.image(src='./squad_default.png'),
+            pc.hstack(
+                pc.button(
+                    "Detail",
+                    on_click=State.detail,
+                    background_image="linear-gradient(144deg,#AF40FF,#5B42F3 50%,#00DDEB)",
+                ),
+                pc.button(
+                    "back",
+                    href='#',
+                    color_scheme="red",
+                ),
             ),
-            pc.box(),
-            spacing="1.5em",
-            font_size="2em",
         ),
-        padding_top="10%",
     )
 
 
-# Add state and page to the app.
-app = pc.App(state=State)
+# 홈페이지 적용 및 컴파일
+app = pc.App(state=State, style=style)
 app.add_page(index, title='CRUNCH')
 app.add_page(squad, title='CRUNCH')
 app.compile()
