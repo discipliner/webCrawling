@@ -29,12 +29,10 @@ print(path)
 os.chdir('webapp/')
 filename = f"{config.app_name}/{config.app_name}.py"
 
-
 # In[2]:
 
 rank = pd.read_csv(path + '/data/rank.csv')
 rank_final = pd.read_csv(path + '/data/rank_final - changed.csv')
-
 
 # In[3]:
 
@@ -59,7 +57,6 @@ weapon = pd.DataFrame({'num': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16
                                      ['리다이린', '피올로'],
                                      ['피오라', '키아라', '카밀로', '아델라', '엘레나'], ['하트', '프리야'], ['나타폰', '마르티나'],
                                      ['요한', '비앙카', '엠마', '아디나'], ['에키온']]})
-
 
 # In[4]:
 
@@ -224,7 +221,7 @@ class State(pc.State):
         plt.xlabel('픽률', fontsize=20)
         plt.ylabel('평균 MMR 획득', fontsize=20)
         # plt.scatter(xy.pickRate, xy.mmrGain)
-        sns.scatterplot(xy, x=xy.pickRate, y=xy.mmrGain, hue=xy.characterName,legend=False)
+        sns.scatterplot(xy, x=xy.pickRate, y=xy.mmrGain, hue=xy.characterName, legend=False)
         plt.title('Season8(0.75a patch) 스쿼드(랭크) 사분면', fontsize=20)
         plt.axhline(mmr, 0, 1)
         plt.axvline(pick, 0, 1)
