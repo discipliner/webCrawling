@@ -5,6 +5,10 @@ import pynecone as pc
 # !/usr/bin/env python
 # coding: utf-8
 
+
+########################################################################################################################
+
+
 # In[1]:
 
 import json
@@ -15,6 +19,8 @@ import matplotlib as mpl  # matplolib에서 음수 데이터의 '-'부호가 깨
 import matplotlib.pyplot as plt  # 시각화를 하기 위해 import 한다.
 import seaborn as sns
 import os
+import numpy as np
+from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 
 warnings.filterwarnings(action='ignore')
 mpl.rcParams['axes.unicode_minus'] = False  # matplolib에서 음수 데이터의 '-'부호가 깨지는 것을 방지한다.
@@ -22,12 +28,20 @@ pd.options.display.float_format = '{:,.5f}'.format
 plt.rcParams["font.size"] = 10  # matplolib에서 사용할 글꼴 크기 설정
 plt.rcParams["font.family"] = "NanumGothicCoding"  # matplolib에서 사용할 글꼴 설정
 
+
+########################################################################################################################
+
+
 # 상대경로 접근을 위해 디렉토리를 저장한다. (webapp → 'workspace/'에 이동 후 path에 저장 → webapp 복귀)
 os.chdir('../')
 path = os.getcwd()
 print(path)
 os.chdir('webapp/')
 filename = f"{config.app_name}/{config.app_name}.py"
+
+
+########################################################################################################################
+
 
 # In[2]:
 
@@ -163,6 +177,10 @@ characterList.nameW[45] = '알렉스'
 
 # In[7]:
 
+#0
+df_characterStats.loc[df_characterStats.characterName == '알렉스', 'characterWeapon'] = '톤파, 암기, 양손검, 권총'
+# df_characterStats[df_characterStats.characterName=='알렉스'].characterWeapon
+
 mmr = df_characterStats.averageMMR.mean()
 pick = df_characterStats.pickRate.mean()
 xy = pd.DataFrame()
@@ -170,7 +188,11 @@ for i, char in df_characterStats.iterrows():
     xy = pd.concat([xy, json_normalize(json.loads(
         f'{"{"}"characterCode": {characterList[characterList.nameW == char.characterName].code.values[0]}, '
         f'"characterName": "{characterList[characterList.nameW == char.characterName].nameW.values[0]}", '
-        f'"pickRate": {df_characterStats.totalGames[i] / 19247 * 100:.2f}, "mmrGain": {df_characterStats.averageMMR[i]:.2f}{"}"}'))])
+        f'"pickRate": {df_characterStats.totalGames[i] / 19247 * 100:.2f}, "mmrGain": {df_characterStats.averageMMR[i]:.2f}{"}"}'))], ignore_index=True)
+
+
+########################################################################################################################
+
 
 # 스타일 정의
 style = {
@@ -211,13 +233,16 @@ style = {
 }
 
 
+########################################################################################################################
+
+
 # State 클래스 정의
 class State(pc.State):
 
-    def detail(self):
-        print('analysis() 실행')
+    # In[8]:
+    def scatter(self):
+        print('scatter() 실행')
         plt.figure(figsize=(20, 12))
-
         plt.xlabel('픽률', fontsize=20)
         plt.ylabel('평균 MMR 획득', fontsize=20)
         # plt.scatter(xy.pickRate, xy.mmrGain)
@@ -233,6 +258,53 @@ class State(pc.State):
                          xytext=(0, -15),  # (x, y)로 부터의 오프셋 (offset_x, offset_y)
                          ha='center')
         plt.show()
+
+    def profile(self):
+        global image
+        print('profile() 실행')
+        xy = pd.DataFrame()
+        for i, char in df_characterStats.iterrows():
+            xy = pd.concat([xy, json_normalize(json.loads(
+                f'{"{"}"characterCode" : {characterList[characterList.nameW == char.characterName].code.values[0]} ,"characterName" : "{characterList[characterList.nameW == char.characterName].nameW.values[0]}" ,"pickRate" : {df_characterStats.totalGames[i] / 19247 * 100:.2f}, "mmrGain" : {df_characterStats.averageMMR[i]:.2f}{"}"}'))],ignore_index=True)
+
+        face=[]
+        for i in range(len(df_characterStats)):
+            face.append(f'{path}/data/mostSkin/{i}/mini.png')
+
+        graphData = pd.DataFrame({'characterName': xy.characterName,
+                                  'x': xy.pickRate,
+                                  'y':xy.mmrGain,
+                                  'image':face,
+                                  })
+        plt.style.use(style='ggplot')
+        plt.rcParams['figure.figsize'] = (22, 14)
+        (fig, ax) = plt.subplots()
+        plt.axhline(mmr, 0, 1, color='blue')
+        plt.axvline(pick, 0, 1, color='blue')
+        plt.axvline(pick * 2, 0, 1, linestyle='--', color='crimson')
+        for x, y, image_path, characterName in zip(graphData.x, graphData.y, graphData.image, graphData.characterName):
+            if ax is None:
+                ax = plt.gca()
+            try:
+                image = plt.imread(image_path)
+            except TypeError:
+                pass
+            im = OffsetImage(image, zoom=0.2)
+            x, y = np.atleast_1d(x, y)
+            artists = []
+            for x0, y0 in zip(x, y):
+                ab = AnnotationBbox(im, (x0, y0), xycoords='data', frameon=False)
+                artists.append(ax.add_artist(ab))
+            ax.update_datalim(np.column_stack([x, y]))
+            ax.autoscale()
+            # ax.annotate(characterName, (x, y), textcoords="offset points", xytext=(0, -25), ha='center') # 텍스트 출력
+        plt.title('Season8(0.75a patch) 스쿼드(랭크) 사분면', fontsize=20)
+        plt.xlabel('픽률', fontsize=20)
+        plt.ylabel('평균 MMR 획득', fontsize=20)
+        plt.show()
+
+
+########################################################################################################################
 
 
 # 인덱스 페이지
@@ -253,6 +325,9 @@ def index():
     )
 
 
+########################################################################################################################
+
+
 # 스쿼드 사분면 페이지
 def squad():
     print('squad() 실행')
@@ -262,9 +337,15 @@ def squad():
             pc.image(src='./squad_default.png'),
             pc.hstack(
                 pc.link(
-                    "Detail",
+                    "Scatter",
                     href='#',
-                    on_click=State.detail,
+                    on_click=State.scatter,
+                    background_image="linear-gradient(144deg,#AF40FF,#5B42F3 50%,#00DDEB)"
+                ),
+                pc.link(
+                    "Profile",
+                    href='#',
+                    on_click=State.profile,
                     background_image="linear-gradient(144deg,#AF40FF,#5B42F3 50%,#00DDEB)"
                 ),
                 pc.link(
@@ -275,6 +356,9 @@ def squad():
             )
         )
     )
+
+
+########################################################################################################################
 
 
 # 홈페이지 적용 및 컴파일
