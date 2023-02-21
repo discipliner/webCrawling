@@ -240,6 +240,7 @@ style = {
 class State(pc.State):
 
     # In[8]:
+    # 산점도 출력
     def scatter(self):
         print('scatter() 실행')
         plt.figure(figsize=(20, 12))
@@ -259,22 +260,24 @@ class State(pc.State):
                          ha='center')
         plt.show()
 
+    # 프로필 이미지 산점도 출력
     def profile(self):
         global image
         print('profile() 실행')
         xy = pd.DataFrame()
         for i, char in df_characterStats.iterrows():
             xy = pd.concat([xy, json_normalize(json.loads(
-                f'{"{"}"characterCode" : {characterList[characterList.nameW == char.characterName].code.values[0]} ,"characterName" : "{characterList[characterList.nameW == char.characterName].nameW.values[0]}" ,"pickRate" : {df_characterStats.totalGames[i] / 19247 * 100:.2f}, "mmrGain" : {df_characterStats.averageMMR[i]:.2f}{"}"}'))],ignore_index=True)
+                f'{"{"}"characterCode" : {characterList[characterList.nameW == char.characterName].code.values[0]} ,"characterName" : "{characterList[characterList.nameW == char.characterName].nameW.values[0]}" ,"pickRate" : {df_characterStats.totalGames[i] / 19247 * 100:.2f}, "mmrGain" : {df_characterStats.averageMMR[i]:.2f}{"}"}'))],
+                           ignore_index=True)
 
-        face=[]
+        face = []
         for i in range(len(df_characterStats)):
             face.append(f'{path}/data/mostSkin/{i}/mini.png')
 
         graphData = pd.DataFrame({'characterName': xy.characterName,
                                   'x': xy.pickRate,
-                                  'y':xy.mmrGain,
-                                  'image':face,
+                                  'y': xy.mmrGain,
+                                  'image': face,
                                   })
         plt.style.use(style='ggplot')
         plt.rcParams['figure.figsize'] = (22, 14)
@@ -303,6 +306,77 @@ class State(pc.State):
         plt.ylabel('평균 MMR 획득', fontsize=20)
         plt.show()
 
+    # 실험체 검색
+    searchChar: str = ''
+    searchWeapon: str = ''
+    '''c_name: list = []
+    c_pickRate: list = []
+    c_winRate: list = []
+    c_mmr: list = []
+    c_skin: list = []'''
+    searchPick: float = 0.0
+    searchWin: float = 0.0
+    searchMmr: float = 0.0
+    searchSkin: str = ''
+    def search(self) -> str:
+        print('search() 실행')
+        '''# 2-1
+        # n = input('검색할 실험체: ')
+        n = self.searchChar
+        img = mpl.image.imread(
+            f'{path}/data/mostSkin/{df_characterStats[df_characterStats.characterCode == characterNamesKr[characterNamesKr.name == n].code.values[0]].index[0]}/full.png')
+        plt.axis('off')
+        plt.imshow(img)
+        print(f'평균 MMR획득: {mmr:.2f}, 평균 픽률: {pick:.2f}%')
+        self.c_name = []
+        self.c_pickRate = []
+        self.c_winRate = []
+        self.c_mmr = []
+        self.c_skin = []
+        for _, c in df_characterStats.iterrows():
+            if c.characterCode == characterNamesKr[characterNamesKr.name == n].values[0][0]:
+                print(f'{c.characterName} 픽률: {c.pickRate}%, 승률: {c.winRate}%, 평균 MMR획득: {c.averageMMR}, 모스트 스킨: {c.mostSkin}')
+                self.c_name.append(c.characterName)
+                self.c_pickRate.append(c.pickRate)
+                self.c_winRate.append(c.pickRate)
+                self.c_mmr.append(c.averageMMR)
+                self.c_skin.append(c.mostSkin)'''
+
+        # 2-2
+        # w = input('무기')
+        n = self.searchChar
+        w = self.searchWeapon
+        skinList = pd.DataFrame()
+
+        skinList = pd.concat([skinList, df_characterStats[
+            df_characterStats.characterCode == characterNamesKr[characterNamesKr.name == n].code.values[0]]], ignore_index=True)
+        gg = f'{n}({w})'
+        if n == '알렉스':
+            gg = '알렉스'
+            img = mpl.image.imread(
+                f'{path}/data/mostSkin/45/full.png')
+            plt.axis('off')
+            plt.imshow(img)
+            print('알렉스는 설정상 모든 무기를 다루지만 인게임에서는 밸런스 문제로 권총, 톤파, 암기, 양손검을 사용하는 실험체입니다.')
+            print()
+            print(f'평균 MMR획득: {mmr:.2f}, 평균 픽률: {pick:.2f}%')
+            print(
+                f'{df_characterStats[df_characterStats.characterName == gg].characterName.values[0]} 픽률: {df_characterStats[df_characterStats.characterName == gg].pickRate.values[0]}%, 승률: {df_characterStats[df_characterStats.characterName == gg].winRate.values[0]}%, 평균 MMR획득: {df_characterStats[df_characterStats.characterName == gg].averageMMR.values[0]}, 모스트 스킨: {df_characterStats[df_characterStats.characterName == gg].mostSkin.values[0]}')
+
+        elif w in skinList.characterWeapon.values:
+            skin = df_characterStats[df_characterStats.characterName == f'{n}({w})'].index[0]
+            img = mpl.image.imread(f'{path}/data/mostSkin/{skin}/full.png')
+            plt.axis('off')
+            plt.imshow(img)
+            print(
+                f'{df_characterStats[df_characterStats.characterName == gg].characterName.values[0]} 픽률: {df_characterStats[df_characterStats.characterName == gg].pickRate.values[0]}%, 승률: {df_characterStats[df_characterStats.characterName == gg].winRate.values[0]}%, 평균 MMR획득: {df_characterStats[df_characterStats.characterName == gg].averageMMR.values[0]}, 모스트 스킨: {df_characterStats[df_characterStats.characterName == gg].mostSkin.values[0]}')
+        else:
+            print(f'{n}은 {w}를 사용하지 않는 실험체입니다.')
+        self.searchPick = df_characterStats[df_characterStats.characterName == gg].pickRate.values[0]
+        self.searchWin = df_characterStats[df_characterStats.characterName == gg].winRate.values[0]
+        self.searchMmr = df_characterStats[df_characterStats.characterName == gg].averageMMR.values[0]
+        self.searchSkin = df_characterStats[df_characterStats.characterName == gg].mostSkin.values[0]
+
 
 ########################################################################################################################
 
@@ -314,14 +388,22 @@ def index():
         pc.vstack(
             pc.heading("ER 웹 크롤링 및 데이터 분석"),
             # pc.box("Progress: editing ", pc.code(filename, font_size="1em")),
-            pc.image(src='/thief.png'),
-            pc.link(
-                "Start",
-                href='/squad',
-                box_shadow="rgba(151, 65, 252, 0.8) 0 15px 30px -10px",
-                background_image="linear-gradient(144deg,#AF40FF,#5B42F3 50%,#00DDEB)"
+            pc.image(src='./thief.png'),
+            pc.hstack(
+                pc.link(
+                    "Squad",
+                    href='/squad',
+                    box_shadow="rgba(151, 65, 252, 0.8) 0 15px 30px -10px",
+                    background_image="linear-gradient(144deg,#AF40FF,#5B42F3 50%,#00DDEB)"
+                ),
+                pc.link(
+                    "Character",
+                    href='/character',
+                    box_shadow="rgba(151, 65, 252, 0.8) 0 15px 30px -10px",
+                    background_image="linear-gradient(144deg,#AF40FF,#5B42F3 50%,#00DDEB)"
+                )
             )
-        )
+        ),
     )
 
 
@@ -361,8 +443,81 @@ def squad():
 ########################################################################################################################
 
 
+# 실험체 페이지
+def character():
+    print('character() 실행')
+    return pc.center(
+        pc.vstack(
+            pc.heading("Season8 실험체 검색"),
+            pc.image(src='./character_default.png'),
+            pc.box("실험체 정보"),
+            pc.hstack(
+                pc.text("실험체명", font_size="20"),
+                pc.input(
+                    on_blur=State.set_searchChar,
+                    placeholder="Type Character",
+                    width="160px"
+                )
+            ),
+            pc.hstack(
+                pc.text("사용무기", font_size="20"),
+                pc.input(
+                    on_blur=State.set_searchWeapon,
+                    placeholder="Type Weapon",
+                    width="160px"
+                )
+            ),
+            pc.table_container(
+                pc.table(
+                    pc.thead(
+                        pc.tr(
+                            # pc.th("무기"),
+                            pc.th("픽률(%)"),
+                            pc.th("승률(%)"),
+                            pc.th("평균 MMR 획득"),
+                            pc.th("모스트 스킨")
+                        )
+                    ),
+                    pc.tbody(
+                        pc.tr(
+                            # pc.td(State.c_name[0]),
+                            # pc.td(State.c_pickRate[0]),
+                            # pc.td(State.c_winRate[0]),
+                            # pc.td(State.c_mmr[0]),
+                            # pc.td(State.c_skin[0])
+                            pc.td(State.searchPick),
+                            pc.td(State.searchWin),
+                            pc.td(State.searchMmr),
+                            pc.td(State.searchSkin)
+                        )
+                    ),
+                    font_size="20",
+                    width="700px"
+                )
+            ),
+            pc.hstack(
+                pc.link(
+                    "Search",
+                    href='#',
+                    on_click=State.search,
+                    background_image="linear-gradient(144deg,#AF40FF,#5B42F3 50%,#00DDEB)"
+                ),
+                pc.link(
+                    "Home",
+                    href='/',
+                    background='red'
+                )
+            )
+        )
+    )
+
+
+########################################################################################################################
+
+
 # 홈페이지 적용 및 컴파일
 app = pc.App(state=State, style=style)
 app.add_page(index, route='/', title='CRUNCH')
 app.add_page(squad, route='/squad', title='CRUNCH')
+app.add_page(character, route='/character', title='CRUNCH')
 app.compile()
