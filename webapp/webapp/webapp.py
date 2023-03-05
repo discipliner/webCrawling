@@ -627,6 +627,15 @@ def index_0():
                     box_shadow="rgba(151, 65, 252, 0.8) 0 15px 30px -10px",
                     background_image="linear-gradient(144deg,#AF40FF,#5B42F3 50%,#00DDEB)"
                 )
+            ),
+            pc.box(''),
+            pc.link(
+                "시즌 요약",
+                href='/fin',
+                box_shadow="rgba(151, 65, 252, 0.8) 0 15px 30px -10px",
+                background='red',
+                width='6em',
+                align='middle'
             )
         ),
     )
@@ -789,10 +798,40 @@ def weapon_3():
 ########################################################################################################################
 
 
+# 스쿼드 사분면 페이지
+def fin_4():
+    print('fin() 실행')
+    return pc.center(
+        pc.vstack(
+            pc.heading("<Season8 0.75a patch 요약>"),
+            pc.image(src='./mostItem/metaGolem-half.png'),
+            pc.box(""),
+            pc.heading('※ 가장 많이 사용된 실험체, 스킨 및 부위별 아이템'),
+            pc.box(""),
+            pc.box(f'실험체(스킨): {characterNamesKr[characterNamesKr.code == rank_final.characterNum.value_counts().head(1).index[0]].name.values[0]}({skinNames[skinNames.code == rank_final[rank_final.characterNum == rank_final.characterNum.value_counts().head(1).index[0]].skinCode.values[0]].values[0][0]})'),
+            pc.box(f'무기: {weaponNames[weaponNames.code == int(rank_final["equipFirstItemForLog.0"].value_counts().head(1).index[0][1:-1])].name.values[0]}, 옷: {armorNames[armorNames.code == int(rank_final["equipFirstItemForLog.1"].value_counts().head(1).index[0][1:-1])].name.values[0]}'),
+            pc.box(f'머리: {armorNames[armorNames.code == int(rank_final["equipFirstItemForLog.2"].value_counts().head(1).index[0][1:-1])].name.values[0]}, 팔: {armorNames[armorNames.code == int(rank_final["equipFirstItemForLog.3"].value_counts().head(1).index[0][1:-1])].name.values[0]}'),
+            # 루트 장신구 api가 null이 뜨는 버그가 있어서 최종장신구로 대체
+            pc.box(f'다리: {armorNames[armorNames.code == int(rank_final["equipFirstItemForLog.4"].value_counts().head(1).index[0][1:-1])].name.values[0]}, 장신구: {armorNames[armorNames.code == int(rank_final["equipment.5"].value_counts().head(1).index[0])].name.values[0]}'),
+            pc.box(""),
+            pc.hstack(
+                pc.link(
+                    "Home",
+                    href='/',
+                    background='red'
+                )
+            )
+        )
+    )
+
+########################################################################################################################
+
+
 # 홈페이지 적용 및 컴파일
 app = pc.App(state=State, style=style)
 app.add_page(index_0, route='/', title='CRUNCH')
 app.add_page(squad_1, route='/squad', title='CRUNCH')
 app.add_page(character_2, route='/character', title='CRUNCH')
 app.add_page(weapon_3, route='/weapon', title='CRUNCH')
+app.add_page(fin_4, route='/fin', title='CRUNCH')
 app.compile()
