@@ -26,7 +26,7 @@ warnings.filterwarnings(action='ignore')
 mpl.rcParams['axes.unicode_minus'] = False  # matplolib에서 음수 데이터의 '-'부호가 깨지는 것을 방지한다.
 pd.options.display.float_format = '{:,.5f}'.format
 plt.rcParams["font.size"] = 10  # matplolib에서 사용할 글꼴 크기 설정
-plt.rcParams["font.family"] = "NanumGothicCoding"  # matplolib에서 사용할 글꼴 설정
+plt.rcParams["font.family"] = "D2Coding"  # matplolib에서 사용할 글꼴 설정
 
 ########################################################################################################################
 
@@ -175,10 +175,11 @@ characterList.nameW[45] = '알렉스'
 
 # In[7]:
 
-# 0
+# 추가 필요!!!!!!!!
 df_characterStats.loc[df_characterStats.characterName == '알렉스', 'characterWeapon'] = '톤파, 암기, 양손검, 권총'
 # df_characterStats[df_characterStats.characterName=='알렉스'].characterWeapon
 
+# 1-1
 mmr = df_characterStats.averageMMR.mean()
 pick = df_characterStats.pickRate.mean()
 xy = pd.DataFrame()
@@ -201,10 +202,17 @@ style = {
     },
     pc.Vstack: {
         "spacing": "1.5em",
-        "font_size": "2em",
+        "font_size": "1.5em",
+    },
+    pc.Hstack: {
+        "spacing": "1.5em",
+        "font_size": "1.5em",
     },
     pc.Heading: {
         "font_size": "2em",
+    },
+    pc.Box: {
+        "font_size": "1.5em",
     },
     pc.Link: {
         "padding": "0.5em",
@@ -229,7 +237,13 @@ style = {
         }
     },
     pc.Text: {
-        "font_size": "0.5em"
+        "font_size": "0.7em"
+    },
+    pc.Tr: {
+        "font_size": "1.5em",
+    },
+    pc.Td: {
+        "font_size": "0.7em",
     }
 }
 
@@ -242,8 +256,8 @@ class State(pc.State):
 
     # In[8]:
     # 산점도 출력
-    def scatter(self):
-        print('scatter() 실행')
+    def squad_1_1(self):
+        print('squad_1_1() 실행')
         plt.figure(figsize=(20, 12))
         plt.xlabel('픽률', fontsize=20)
         plt.ylabel('평균 MMR 획득', fontsize=20)
@@ -261,16 +275,16 @@ class State(pc.State):
                          ha='center')
         plt.show()
 
-    # 프로필 이미지 산점도 출력
-    def profile(self):
+    # 1-2 프로필 이미지 산점도 출력
+    def squad_1_2(self):
         global image
-        print('profile() 실행')
+        print('squad_1_2() 실행')
         xy = pd.DataFrame()
         for i, char in df_characterStats.iterrows():
             xy = pd.concat([xy, json_normalize(json.loads(
                 f'{"{"}"characterCode" : {characterList[characterList.nameW == char.characterName].code.values[0]} ,"characterName" : "{characterList[characterList.nameW == char.characterName].nameW.values[0]}" ,"pickRate" : {df_characterStats.totalGames[i] / 19247 * 100:.2f}, "mmrGain" : {df_characterStats.averageMMR[i]:.2f}{"}"}'))],
                            ignore_index=True)
-
+        # 1-2-1
         face = []
         for i in range(len(df_characterStats)):
             face.append(f'{path}/data/mostSkin/{i}/mini.png')
@@ -280,6 +294,7 @@ class State(pc.State):
                                   'y': xy.mmrGain,
                                   'image': face,
                                   })
+        # 1-2-2
         plt.style.use(style='ggplot')
         plt.rcParams['figure.figsize'] = (22, 14)
         (fig, ax) = plt.subplots()
@@ -307,7 +322,7 @@ class State(pc.State):
         plt.ylabel('평균 MMR 획득', fontsize=20)
         plt.show()
 
-    # 실험체 검색
+    # 실험체 검색 변수
     searchChar: str = ''
     searchWeapon: str = ''
     searchPick: float = 0.0
@@ -319,8 +334,9 @@ class State(pc.State):
     searchMsg: str = ''
     searchImg: str = './character_default.png'
 
-    def search(self) -> str:
-        print('search() 실행')
+    # 2-2 실험체 검색
+    def character_2_2(self) -> str:
+        print('character_2_2() 실행')
         # 2-2
         # w = input('무기')
         n = self.searchChar
@@ -374,28 +390,173 @@ class State(pc.State):
             self.searchMsg = n + '은(는) ' + w + '를 사용하지 않는 실험체입니다.'
             self.searchImg = './character_default.png'
 
+    # 3 무기군
+    def weapon_3_1(self):
+        print('weapon_3_1() 실행')
+        # 3-0
+        df2 = pd.DataFrame()
+        df_weaponStats = pd.DataFrame()
+
+        for i in range(23):
+            test = pd.concat([df2, rank_final[rank_final.bestWeapon == weapon.num[i]]])
+            stat = (
+                f'{"{"}"weaponName" : "{weapon.name[i]}", '
+                f'"weaponCode" : {weapon.num[i]}, '
+                # 평균 플레이어 킬수
+                f'"averageKillPlayer" : {test.playerKill.mean():.2f}, '
+                # 평균 플레이어 데미지
+                f'"averageDamegeToPlayer" : {test.damageToPlayer.mean():.2f}, '
+                # 평균 야동 킬수
+                f'"averageKillMonster" : {test.monsterKill.mean():.2f}, '
+                # 평균 야동 데미지
+                f'"averageDamegeToMonster" : {test.damageToMonster.mean():.2f}, '
+                # 게임 플레이 수
+                f'"totalGames" : {test.count()[0]}, '
+                # # 평균 승률 => 자히르 투척 승률 0%짜리 터짐
+                f'"winRate" : {test[test.victory == 1].victory.count() / test.victory.count():.2f}, '
+        
+                # 평균 등수
+                f'"averageRank" : {test[test.escapeState != 3].gameRank.mean():.2f}, '
+                # 탈출 횟수
+                f'"escapeCount" : {test[test.escapeState == 3].escapeState.count()}, '
+                # 평균 mmr 획득률
+                f'"averageMMR" : {test.mmrGain.mean():.2f}, '
+                # 픽률
+                f'"pickRate" : {test.count()[0] / 19248 * 100:.2f},'
+        
+        
+                # 최종 아이템, 사용 횟수
+                f'"finalWeapon" : "{weaponNames[weaponNames.code == int(test["equipment.0"].value_counts().head(1).index[0])].values[0][1]}", "finalWeaponCount" : {test["equipment.0"].value_counts().head(1).values[0]}, '
+                f'"finalBody" : "{armorNames[armorNames.code == int(test["equipment.1"].value_counts().head(1).index[0])].values[0][1]}", "finalBodyCount" : {test["equipment.1"].value_counts().head(1).values[0]}, '
+                f'"finalHead" : "{armorNames[armorNames.code == int(test["equipment.2"].value_counts().head(1).index[0])].values[0][1]}", "finalHeadCount" : {test["equipment.2"].value_counts().head(1).values[0]}, '
+                f'"finalArm" : "{armorNames[armorNames.code == int(test["equipment.3"].value_counts().head(1).index[0])].values[0][1]}", "finalArmCount" : {test["equipment.3"].value_counts().head(1).values[0]}, '
+                f'"finalFoot" : "{armorNames[armorNames.code == int(test["equipment.4"].value_counts().head(1).index[0])].values[0][1]}", "finalFootCount" : {test["equipment.4"].value_counts().head(1).values[0]}, '
+                f'"finalTinkled" : "{armorNames[armorNames.code == int(test["equipment.5"].value_counts().head(1).index[0])].values[0][1]}", "finalTinkledCount" : {test["equipment.5"].value_counts().head(1).values[0]}, '
+        
+                # 가장 많이 선택한 루트 아이템, 사용 횟수
+                f'"routeWeapon" : "{weaponNames[weaponNames.code == int(test["equipFirstItemForLog.0"].value_counts().head(1).index[0][1:-1])].values[0][1]}", "routeWeaponCount" : {test["equipFirstItemForLog.0"].value_counts().head(1)[0]}, '
+                f'"routeBody" : "{armorNames[armorNames.code == int(test["equipFirstItemForLog.1"].value_counts().head(1).index[0][1:-1])].values[0][1]}", "routeBodyCount" : {test["equipFirstItemForLog.1"].value_counts().head(1)[0]}, '
+                f'"routeHead" : "{armorNames[armorNames.code == int(test["equipFirstItemForLog.2"].value_counts().head(1).index[0][1:-1])].values[0][1]}", "routeHeadCount" : {test["equipFirstItemForLog.2"].value_counts().head(1)[0]}, '
+                f'"routeArm" : "{armorNames[armorNames.code == int(test["equipFirstItemForLog.3"].value_counts().head(1).index[0][1:-1])].values[0][1]}", "routeArmCount" : {test["equipFirstItemForLog.3"].value_counts().head(1)[0]}, '
+                f'"routeFoot" : "{armorNames[armorNames.code == int(test["equipFirstItemForLog.4"].value_counts().head(1).index[0][1:-1])].values[0][1]}", "routeFootCount" : {test["equipFirstItemForLog.4"].value_counts().head(1)[0]}, '
+        
+                f'"routeTinkled" : "", "routeTinkledCount" : ""{"}"}'
+            )
+            df_weaponStats = pd.concat([df_weaponStats, json_normalize(json.loads(stat))], ignore_index=True)
+            del test, stat
+
+        # 3-1
+        plt.figure(figsize=[10, 6])
+        wmmr = df_weaponStats.averageMMR.mean()
+        wpick = df_weaponStats.pickRate.mean()
+        gg = pd.DataFrame()
+        for i, char in df_weaponStats.iterrows():
+            gg = pd.concat([gg, json_normalize(json.loads(
+                f'{"{"}"weaponCode" : {weapon[weapon.name == char.weaponName].num.values[0]} ,"weaponName" : "{weapon[weapon.name == char.weaponName].name.values[0]}" ,"pickRate" : {df_weaponStats[df_weaponStats.weaponName == weapon[weapon.name == char.weaponName].name.values[0]].totalGames[i] / 19247 * 100:.2f}, "mmrGain" : {df_weaponStats[df_weaponStats.weaponName == weapon[weapon.name == char.weaponName].name.values[0]].averageMMR[i]:.2f}{"}"}'))])
+        plt.xlabel('픽률', fontsize=20)
+        plt.ylabel('평균 MMR 획득', fontsize=20)
+        # plt.scatter(xy.pickRate, xy.mmrGain)
+        sns.scatterplot(gg, x=gg.pickRate, y=gg.mmrGain, hue=gg.weaponName, legend=False)
+        plt.title('Season8(0.75a patch) 스쿼드(랭크, 무기군) 사분면', fontsize=20)
+        plt.axhline(wmmr, 0, 1, color='blue')
+        plt.axvline(wpick, 0, 1, color='blue')
+        for _, j in gg.iterrows():
+            plt.annotate(j.weaponName,
+                         (j.pickRate, j.mmrGain),
+                         textcoords="offset points",  # 텍스트 위치를 (x,y)로 부터의 오프셋 (offset_x, offset_y)로 지정
+                         xytext=(0, -15),  # (x, y)로 부터의 오프셋 (offset_x, offset_y)
+                         ha='center')
+        plt.show()
+
+    classifyWeapon: str = ''
+    classifyMsg: str = ''
+
+    def weapon_3_2_1(self):
+        # 3-2-0 무기군 검색
+        # w = input('검색할 무기군')
+        w = self.classifyWeapon
+
+        xyw = pd.DataFrame()
+        try:
+            for i, char in df_characterStats.iterrows():
+                if char.characterWeapon == w:
+                    xyw = pd.concat([xyw, json_normalize(json.loads(f'{"{"}"characterCode" : {char.characterCode} '
+                                                                    f',"characterName" : "{char.characterName}" '
+                                                                    f',"pickRate" : {df_characterStats[df_characterStats.characterWeapon == w].totalGames[i] / 19247 * 100:.2f}, '
+                                                                    f'"mmrGain" : {df_characterStats[df_characterStats.characterWeapon == w].averageMMR[i]:.2f}{"}"}'))],
+                                    ignore_index=True)
+
+            if w in ['권총', '양손검', '암기', '톤파']:
+                xyw = pd.concat([xyw, json_normalize(json.loads(
+                    f'{"{"}"characterCode" : {df_characterStats[df_characterStats.characterName == "알렉스"].characterCode.values[0]} '
+                    f',"characterName" : "{df_characterStats[df_characterStats.characterName == "알렉스"].characterName.values[0]}"'
+                    f',"pickRate" : {df_characterStats[df_characterStats.characterName == "알렉스"].totalGames.values[0] / 19247 * 100:.2f},'
+                    f'"mmrGain" : {df_characterStats[df_characterStats.characterName == "알렉스"].averageMMR.values[0]:.2f}{"}"}'))],
+                                ignore_index=True)
+            face = []
+            if w not in weapon.name.values:
+                print(f'{w}은(는) 존재하지 않는 무기군입니다.')
+            else:
+                for i in range(len(xyw)):
+                    face.append(
+                        f'{path}/data/mostSkin/{df_characterStats[df_characterStats.characterName == xyw.characterName[i]].index[0]}/mini.png')
+
+                wgraphData = pd.DataFrame({'characterName': xyw.characterName,
+                                           'x': xyw.pickRate,
+                                           'y': xyw.mmrGain,
+                                           'image': face,
+                                           })
+                print(wgraphData)
+            # 3-2-1
+            plt.figure(figsize=(10, 6))
+            plt.xlabel('픽률', fontsize=20)
+            plt.ylabel('평균 MMR 획득', fontsize=20)
+            sns.scatterplot(xyw, x=xyw.pickRate, y=xyw.mmrGain, hue=xyw.characterName, legend=False)
+            plt.title(f'Season8(0.75a patch) 무기군<{w}>(스쿼드, 랭크) 사분면', fontsize=20)
+            plt.axhline(mmr, 0, 1, color='blue')
+            plt.axvline(pick, 0, 1, color='blue')
+            plt.axvline(pick * 2, 0, 1, linestyle='--', color='crimson')
+            for _, j in xyw.iterrows():
+                plt.annotate(j.characterName,
+                             (j.pickRate, j.mmrGain),
+                             textcoords="offset points",  # 텍스트 위치를 (x,y)로 부터의 오프셋 (offset_x, offset_y)로 지정
+                             xytext=(0, -15),  # (x, y)로 부터의 오프셋 (offset_x, offset_y)
+                             ha='center')
+            plt.show()
+        except:
+            self.classifyMsg = w + '은(는) 존재하지 않는 무기군입니다.'
+
+    def weapon_3_2_2(self):
+        pass
+
 
 ########################################################################################################################
 
 
 # 인덱스 페이지
-def index():
+def index_0():
     print('index() 실행')
     return pc.center(
         pc.vstack(
             pc.heading("ER 웹 크롤링 및 데이터 분석"),
             # pc.box("Progress: editing ", pc.code(filename, font_size="1em")),
-            pc.image(src='./thief.png'),
+            pc.image(src='./index.png'),
             pc.hstack(
                 pc.link(
-                    "Squad",
+                    "스쿼드",
                     href='/squad',
                     box_shadow="rgba(151, 65, 252, 0.8) 0 15px 30px -10px",
                     background_image="linear-gradient(144deg,#AF40FF,#5B42F3 50%,#00DDEB)"
                 ),
                 pc.link(
-                    "Character",
+                    "실험체",
                     href='/character',
+                    box_shadow="rgba(151, 65, 252, 0.8) 0 15px 30px -10px",
+                    background_image="linear-gradient(144deg,#AF40FF,#5B42F3 50%,#00DDEB)"
+                ),
+                pc.link(
+                    "무기군",
+                    href='/weapon',
                     box_shadow="rgba(151, 65, 252, 0.8) 0 15px 30px -10px",
                     background_image="linear-gradient(144deg,#AF40FF,#5B42F3 50%,#00DDEB)"
                 )
@@ -408,23 +569,24 @@ def index():
 
 
 # 스쿼드 사분면 페이지
-def squad():
+def squad_1():
     print('squad() 실행')
     return pc.center(
         pc.vstack(
             pc.heading("Season8 스쿼드(랭크) 사분면"),
             pc.image(src='./squad_default.png'),
+            pc.box(""),
             pc.hstack(
                 pc.link(
                     "Scatter",
                     href='#',
-                    on_click=State.scatter,
+                    on_click=State.squad_1_1,
                     background_image="linear-gradient(144deg,#AF40FF,#5B42F3 50%,#00DDEB)"
                 ),
                 pc.link(
                     "Profile",
                     href='#',
-                    on_click=State.profile,
+                    on_click=State.squad_1_2,
                     background_image="linear-gradient(144deg,#AF40FF,#5B42F3 50%,#00DDEB)"
                 ),
                 pc.link(
@@ -441,7 +603,7 @@ def squad():
 
 
 # 실험체 페이지
-def character():
+def character_2():
     print('character() 실행')
     return pc.center(
         pc.vstack(
@@ -450,7 +612,7 @@ def character():
             pc.image(src=State.searchImg),
             pc.box("실험체 정보"),
             pc.hstack(
-                pc.text("실험체명", font_size="20"),
+                pc.text("실험체명"),
                 pc.input(
                     on_blur=State.set_searchChar,
                     placeholder="Type Character",
@@ -458,18 +620,18 @@ def character():
                 )
             ),
             pc.hstack(
-                pc.text("사용무기", font_size="20"),
+                pc.text("사용무기"),
                 pc.input(
                     on_blur=State.set_searchWeapon,
                     placeholder="Type Weapon",
                     width="160px"
                 )
             ),
+            pc.box(""),
             pc.table_container(
                 pc.table(
                     pc.thead(
                         pc.tr(
-                            # pc.th("무기"),
                             pc.th("픽률(%)"),
                             pc.th("승률(%)"),
                             pc.th("평균 MMR 획득"),
@@ -488,12 +650,63 @@ def character():
                     width="700px"
                 ),
             ),
+            pc.box(""),
             pc.text(State.searchMsg),
             pc.hstack(
                 pc.link(
                     "Search",
                     href='#',
-                    on_click=State.search,
+                    on_click=State.character_2_2,
+                    background_image="linear-gradient(144deg,#AF40FF,#5B42F3 50%,#00DDEB)"
+                ),
+                pc.link(
+                    "Home",
+                    href='/',
+                    background='red'
+                )
+            )
+        )
+    )
+
+
+########################################################################################################################
+
+
+def weapon_3():
+    print('weapon() 실행')
+    return pc.center(
+        pc.vstack(
+            pc.heading("Season8 무기군 분류"),
+            pc.image(src='weapon_default.png'),
+            pc.box(""),
+            pc.box("무기군 검색"),
+            pc.hstack(
+                pc.text("사용무기"),
+                pc.input(
+                    on_blur=State.set_classifyWeapon,
+                    placeholder="Type Weapon",
+                    width="160px"
+                )
+            ),
+            pc.box(""),
+            pc.text(State.classifyMsg),
+            pc.hstack(
+                pc.link(
+                    "Scatter 1",
+                    href='#',
+                    on_click=State.weapon_3_1,
+                    background_image="linear-gradient(144deg,#AF40FF,#5B42F3 50%,#00DDEB)"
+                ),
+                pc.link(
+                    "Scatter 2",
+                    href='#',
+                    on_click=State.weapon_3_2_1,
+                    background_image="linear-gradient(144deg,#AF40FF,#5B42F3 50%,#00DDEB)"
+                ),
+                pc.link(
+                    "Profile",
+                    href='#',
+                    on_click=State.weapon_3_2_2,
                     background_image="linear-gradient(144deg,#AF40FF,#5B42F3 50%,#00DDEB)"
                 ),
                 pc.link(
@@ -511,7 +724,8 @@ def character():
 
 # 홈페이지 적용 및 컴파일
 app = pc.App(state=State, style=style)
-app.add_page(index, route='/', title='CRUNCH')
-app.add_page(squad, route='/squad', title='CRUNCH')
-app.add_page(character, route='/character', title='CRUNCH')
+app.add_page(index_0, route='/', title='CRUNCH')
+app.add_page(squad_1, route='/squad', title='CRUNCH')
+app.add_page(character_2, route='/character', title='CRUNCH')
+app.add_page(weapon_3, route='/weapon', title='CRUNCH')
 app.compile()
