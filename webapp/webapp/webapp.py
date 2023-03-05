@@ -644,7 +644,7 @@ def index_0():
 ########################################################################################################################
 
 
-# 스쿼드 사분면 페이지
+# 스쿼드 페이지
 def squad_1():
     print('squad() 실행')
     return pc.center(
@@ -748,6 +748,7 @@ def character_2():
 ########################################################################################################################
 
 
+# 무기군 페이지
 def weapon_3():
     print('weapon() 실행')
     return pc.center(
@@ -798,7 +799,7 @@ def weapon_3():
 ########################################################################################################################
 
 
-# 스쿼드 사분면 페이지
+# 시즌 8 요약 페이지
 def fin_4():
     print('fin() 실행')
     return pc.center(
@@ -806,13 +807,47 @@ def fin_4():
             pc.heading("<Season8 0.75a patch 요약>"),
             pc.image(src='./mostItem/metaGolem-half.png'),
             pc.box(""),
-            pc.heading('※ 가장 많이 사용된 실험체, 스킨 및 부위별 아이템'),
+            pc.heading('※ 가장 많이 사용된 실험체 & 스킨 및 부위별 아이템', font_size='1.3em'),
             pc.box(""),
-            pc.box(f'실험체(스킨): {characterNamesKr[characterNamesKr.code == rank_final.characterNum.value_counts().head(1).index[0]].name.values[0]}({skinNames[skinNames.code == rank_final[rank_final.characterNum == rank_final.characterNum.value_counts().head(1).index[0]].skinCode.values[0]].values[0][0]})'),
-            pc.box(f'무기: {weaponNames[weaponNames.code == int(rank_final["equipFirstItemForLog.0"].value_counts().head(1).index[0][1:-1])].name.values[0]}, 옷: {armorNames[armorNames.code == int(rank_final["equipFirstItemForLog.1"].value_counts().head(1).index[0][1:-1])].name.values[0]}'),
-            pc.box(f'머리: {armorNames[armorNames.code == int(rank_final["equipFirstItemForLog.2"].value_counts().head(1).index[0][1:-1])].name.values[0]}, 팔: {armorNames[armorNames.code == int(rank_final["equipFirstItemForLog.3"].value_counts().head(1).index[0][1:-1])].name.values[0]}'),
-            # 루트 장신구 api가 null이 뜨는 버그가 있어서 최종장신구로 대체
-            pc.box(f'다리: {armorNames[armorNames.code == int(rank_final["equipFirstItemForLog.4"].value_counts().head(1).index[0][1:-1])].name.values[0]}, 장신구: {armorNames[armorNames.code == int(rank_final["equipment.5"].value_counts().head(1).index[0])].name.values[0]}'),
+            # pc.box(f'실험체(스킨): {characterNamesKr[characterNamesKr.code == rank_final.characterNum.value_counts().head(1).index[0]].name.values[0]}({skinNames[skinNames.code == rank_final[rank_final.characterNum == rank_final.characterNum.value_counts().head(1).index[0]].skinCode.values[0]].values[0][0]})'),
+            # pc.box(f'무기: {weaponNames[weaponNames.code == int(rank_final["equipFirstItemForLog.0"].value_counts().head(1).index[0][1:-1])].name.values[0]}, 옷: {armorNames[armorNames.code == int(rank_final["equipFirstItemForLog.1"].value_counts().head(1).index[0][1:-1])].name.values[0]}'),
+            # pc.box(f'머리: {armorNames[armorNames.code == int(rank_final["equipFirstItemForLog.2"].value_counts().head(1).index[0][1:-1])].name.values[0]}, 팔: {armorNames[armorNames.code == int(rank_final["equipFirstItemForLog.3"].value_counts().head(1).index[0][1:-1])].name.values[0]}'),
+            # # 루트 장신구 api가 null이 뜨는 버그가 있어서 최종장신구로 대체
+            # pc.box(f'다리: {armorNames[armorNames.code == int(rank_final["equipFirstItemForLog.4"].value_counts().head(1).index[0][1:-1])].name.values[0]}, 장신구: {armorNames[armorNames.code == int(rank_final["equipment.5"].value_counts().head(1).index[0])].name.values[0]}'),
+            pc.table_container(
+                pc.table(
+                    pc.thead(
+                        pc.tr(
+                            pc.th('실험체'),
+                            pc.td(f'{characterNamesKr[characterNamesKr.code == rank_final.characterNum.value_counts().head(1).index[0]].name.values[0]}'),
+                            pc.th('스킨'),
+                            pc.td(f'{skinNames[skinNames.code == rank_final[rank_final.characterNum == rank_final.characterNum.value_counts().head(1).index[0]].skinCode.values[0]].values[0][0]}'),
+                        )
+                    ),
+                    pc.tbody(
+                        pc.tr(
+                            pc.th('무기'),
+                            pc.td(f'{weaponNames[weaponNames.code == int(rank_final["equipFirstItemForLog.0"].value_counts().head(1).index[0][1:-1])].name.values[0]}'),
+                            pc.th('옷'),
+                            pc.td(f'{armorNames[armorNames.code == int(rank_final["equipFirstItemForLog.1"].value_counts().head(1).index[0][1:-1])].name.values[0]}')
+                        ),
+                        pc.tr(
+                            pc.th('머리'),
+                            pc.td(f'{armorNames[armorNames.code == int(rank_final["equipFirstItemForLog.2"].value_counts().head(1).index[0][1:-1])].name.values[0]}'),
+                            pc.th('팔'),
+                            pc.td(f'{armorNames[armorNames.code == int(rank_final["equipFirstItemForLog.3"].value_counts().head(1).index[0][1:-1])].name.values[0]}')
+                        ),
+                        pc.tr(
+                            pc.th('다리'),
+                            pc.td(f'{armorNames[armorNames.code == int(rank_final["equipFirstItemForLog.4"].value_counts().head(1).index[0][1:-1])].name.values[0]}'),
+                            pc.th('장신구'),
+                            pc.td(f'{armorNames[armorNames.code == int(rank_final["equipment.5"].value_counts().head(1).index[0])].name.values[0]}')
+                        ),
+                    ),
+                    # font_size="1em",
+                    width="700px"
+                ),
+            ),
             pc.box(""),
             pc.hstack(
                 pc.link(
