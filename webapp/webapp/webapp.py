@@ -341,46 +341,46 @@ class State(pc.State):
         # w = input('무기')
         n = self.searchChar
         w = self.searchWeapon
-        skinList = pd.DataFrame()
-
-        skinList = pd.concat([skinList, df_characterStats[
-            df_characterStats.characterCode == characterNamesKr[characterNamesKr.name == n].code.values[0]]], ignore_index=True)
-        gg = f'{n}({w})'
-        if n == '알렉스':
-            gg = '알렉스'
-            skin = df_characterStats[df_characterStats.characterName == f'{n}'].index[0]
-            img = mpl.image.imread(
-                f'{path}/data/mostSkin/{skin}/full.png')
-            self.searchImg = './mostSkin/' + str(skin) + '/full.png'
-            plt.axis('off')
-            plt.imshow(img)
-            self.searchMsg = '알렉스는 권총, 톤파, 암기, 양손검을 사용하는 실험체입니다.'
-            print('알렉스는 설정상 모든 무기를 다루지만 인게임에서는 밸런스 문제로 권총, 톤파, 암기, 양손검을 사용하는 실험체입니다.')
-            print()
-            print(f'평균 MMR획득: {mmr:.2f}, 평균 픽률: {pick:.2f}%')
-            print(
-                f'{df_characterStats[df_characterStats.characterName == gg].characterName.values[0]} 픽률: {df_characterStats[df_characterStats.characterName == gg].pickRate.values[0]}%, 승률: {df_characterStats[df_characterStats.characterName == gg].winRate.values[0]}%, 평균 MMR획득: {df_characterStats[df_characterStats.characterName == gg].averageMMR.values[0]}, 모스트 스킨: {df_characterStats[df_characterStats.characterName == gg].mostSkin.values[0]}')
-        elif w in skinList.characterWeapon.values:
-            skin = df_characterStats[df_characterStats.characterName == f'{n}({w})'].index[0]
-            img = mpl.image.imread(f'{path}/data/mostSkin/{skin}/full.png')
-            self.searchImg = './mostSkin/' + str(skin) + '/full.png'
-            plt.axis('off')
-            plt.imshow(img)
-            print(f'평균 MMR획득: {mmr:.2f}, 평균 픽률: {pick:.2f}%')
-            print(
-                f'{df_characterStats[df_characterStats.characterName == gg].characterName.values[0]} 픽률: {df_characterStats[df_characterStats.characterName == gg].pickRate.values[0]}%, 승률: {df_characterStats[df_characterStats.characterName == gg].winRate.values[0]}%, 평균 MMR획득: {df_characterStats[df_characterStats.characterName == gg].averageMMR.values[0]}, 모스트 스킨: {df_characterStats[df_characterStats.characterName == gg].mostSkin.values[0]}')
-        else:
-            print('else')
-            print(f'{n}는(은) {w}를 사용하지 않는 실험체입니다.')
         try:
+            skinList = pd.DataFrame()
+            skinList = pd.concat([skinList, df_characterStats[
+                df_characterStats.characterCode == characterNamesKr[characterNamesKr.name == n].code.values[0]]], ignore_index=True)
+            gg = f'{n}({w})'
+            if n == '알렉스':
+                gg = '알렉스'
+                skin = df_characterStats[df_characterStats.characterName == f'{n}'].index[0]
+                self.searchImg = './mostSkin/' + str(skin) + '/full.png'
+                # img = mpl.image.imread(
+                #     f'{path}/data/mostSkin/{skin}/full.png')
+                # plt.axis('off')
+                # plt.imshow(img)
+                self.searchMsg = '알렉스는 권총, 톤파, 암기, 양손검을 사용하는 실험체입니다.'
+                print('알렉스는 설정상 모든 무기를 다루지만 인게임에서는 밸런스 문제로 권총, 톤파, 암기, 양손검을 사용하는 실험체입니다.')
+                print()
+                print(f'평균 MMR획득: {mmr:.2f}, 평균 픽률: {pick:.2f}%')
+                print(
+                    f'{df_characterStats[df_characterStats.characterName == gg].characterName.values[0]} 픽률: {df_characterStats[df_characterStats.characterName == gg].pickRate.values[0]}%, 승률: {df_characterStats[df_characterStats.characterName == gg].winRate.values[0]}%, 평균 MMR획득: {df_characterStats[df_characterStats.characterName == gg].averageMMR.values[0]}, 모스트 스킨: {df_characterStats[df_characterStats.characterName == gg].mostSkin.values[0]}')
+            elif w in skinList.characterWeapon.values:
+                skin = df_characterStats[df_characterStats.characterName == f'{n}({w})'].index[0]
+                self.searchImg = './mostSkin/' + str(skin) + '/full.png'
+                # img = mpl.image.imread(f'{path}/data/mostSkin/{skin}/full.png')
+                # plt.axis('off')
+                # plt.imshow(img)
+                print(f'평균 MMR획득: {mmr:.2f}, 평균 픽률: {pick:.2f}%')
+                print(
+                    f'{df_characterStats[df_characterStats.characterName == gg].characterName.values[0]} 픽률: {df_characterStats[df_characterStats.characterName == gg].pickRate.values[0]}%, 승률: {df_characterStats[df_characterStats.characterName == gg].winRate.values[0]}%, 평균 MMR획득: {df_characterStats[df_characterStats.characterName == gg].averageMMR.values[0]}, 모스트 스킨: {df_characterStats[df_characterStats.characterName == gg].mostSkin.values[0]}')
+                self.searchMsg = ''
+            else:
+                print('else')
+                print(f'{n}는(은) {w}를 사용하지 않는 실험체입니다.')
             self.searchPick = df_characterStats[df_characterStats.characterName == gg].pickRate.values[0]
             self.searchWin = df_characterStats[df_characterStats.characterName == gg].winRate.values[0] * 100
             self.searchMmr = df_characterStats[df_characterStats.characterName == gg].averageMMR.values[0]
             self.searchSkin = df_characterStats[df_characterStats.characterName == gg].mostSkin.values[0]
         except:
             print('except')
-            self.searchChar = ''
-            self.searchWeapon = ''
+            # self.searchChar = ''
+            # self.searchWeapon = ''
             self.searchPick = 0.0
             self.searchMeanPick = 0.0
             self.searchWin = 0.0
@@ -474,8 +474,8 @@ class State(pc.State):
     def weapon_3_2_1(self):
         # 3-2-0 무기군 검색
         # w = input('검색할 무기군')
+        self.classifyMsg = ''
         w = self.classifyWeapon
-
         xyw = pd.DataFrame()
         try:
             for i, char in df_characterStats.iterrows():
@@ -496,6 +496,7 @@ class State(pc.State):
             face = []
             if w not in weapon.name.values:
                 print(f'{w}은(는) 존재하지 않는 무기군입니다.')
+                self.classifyMsg = w + '은(는) 존재하지 않는 무기군입니다.'
             else:
                 for i in range(len(xyw)):
                     face.append(
@@ -507,27 +508,93 @@ class State(pc.State):
                                            'image': face,
                                            })
                 print(wgraphData)
-            # 3-2-1
-            plt.figure(figsize=(10, 6))
-            plt.xlabel('픽률', fontsize=20)
-            plt.ylabel('평균 MMR 획득', fontsize=20)
-            sns.scatterplot(xyw, x=xyw.pickRate, y=xyw.mmrGain, hue=xyw.characterName, legend=False)
-            plt.title(f'Season8(0.75a patch) 무기군<{w}>(스쿼드, 랭크) 사분면', fontsize=20)
-            plt.axhline(mmr, 0, 1, color='blue')
-            plt.axvline(pick, 0, 1, color='blue')
-            plt.axvline(pick * 2, 0, 1, linestyle='--', color='crimson')
-            for _, j in xyw.iterrows():
-                plt.annotate(j.characterName,
-                             (j.pickRate, j.mmrGain),
-                             textcoords="offset points",  # 텍스트 위치를 (x,y)로 부터의 오프셋 (offset_x, offset_y)로 지정
-                             xytext=(0, -15),  # (x, y)로 부터의 오프셋 (offset_x, offset_y)
-                             ha='center')
-            plt.show()
+                # 3-2-1
+                plt.figure(figsize=(10, 6))
+                plt.xlabel('픽률', fontsize=20)
+                plt.ylabel('평균 MMR 획득', fontsize=20)
+                sns.scatterplot(xyw, x=xyw.pickRate, y=xyw.mmrGain, hue=xyw.characterName, legend=False)
+                plt.title(f'Season8(0.75a patch) 무기군<{w}>(스쿼드, 랭크) 사분면', fontsize=20)
+                plt.axhline(mmr, 0, 1, color='blue')
+                plt.axvline(pick, 0, 1, color='blue')
+                plt.axvline(pick * 2, 0, 1, linestyle='--', color='crimson')
+                for _, j in xyw.iterrows():
+                    plt.annotate(j.characterName,
+                                 (j.pickRate, j.mmrGain),
+                                 textcoords="offset points",  # 텍스트 위치를 (x,y)로 부터의 오프셋 (offset_x, offset_y)로 지정
+                                 xytext=(0, -15),  # (x, y)로 부터의 오프셋 (offset_x, offset_y)
+                                 ha='center')
+                plt.show()
         except:
             self.classifyMsg = w + '은(는) 존재하지 않는 무기군입니다.'
 
     def weapon_3_2_2(self):
-        pass
+        # 3-2-0 무기군 검색
+        # w = input('검색할 무기군')
+        self.classifyMsg = ''
+        w = self.classifyWeapon
+        xyw = pd.DataFrame()
+        try:
+            for i, char in df_characterStats.iterrows():
+                if char.characterWeapon == w:
+                    xyw = pd.concat([xyw, json_normalize(json.loads(f'{"{"}"characterCode" : {char.characterCode} '
+                                                                    f',"characterName" : "{char.characterName}" '
+                                                                    f',"pickRate" : {df_characterStats[df_characterStats.characterWeapon == w].totalGames[i] / 19247 * 100:.2f}, '
+                                                                    f'"mmrGain" : {df_characterStats[df_characterStats.characterWeapon == w].averageMMR[i]:.2f}{"}"}'))],
+                                    ignore_index=True)
+
+            if w in ['권총', '양손검', '암기', '톤파']:
+                xyw = pd.concat([xyw, json_normalize(json.loads(
+                    f'{"{"}"characterCode" : {df_characterStats[df_characterStats.characterName == "알렉스"].characterCode.values[0]} '
+                    f',"characterName" : "{df_characterStats[df_characterStats.characterName == "알렉스"].characterName.values[0]}"'
+                    f',"pickRate" : {df_characterStats[df_characterStats.characterName == "알렉스"].totalGames.values[0] / 19247 * 100:.2f},'
+                    f'"mmrGain" : {df_characterStats[df_characterStats.characterName == "알렉스"].averageMMR.values[0]:.2f}{"}"}'))],
+                                ignore_index=True)
+            face = []
+            if w not in weapon.name.values:
+                print(f'{w}은(는) 존재하지 않는 무기군입니다.')
+                self.classifyMsg = w + '은(는) 존재하지 않는 무기군입니다.'
+            else:
+                for i in range(len(xyw)):
+                    face.append(
+                        f'{path}/data/mostSkin/{df_characterStats[df_characterStats.characterName == xyw.characterName[i]].index[0]}/mini.png')
+
+                wgraphData = pd.DataFrame({'characterName': xyw.characterName,
+                                           'x': xyw.pickRate,
+                                           'y': xyw.mmrGain,
+                                           'image': face,
+                                           })
+                print(wgraphData)
+                # 3-2-2
+                plt.style.use(style='ggplot')
+                # plt.figure(figsize=(22, 14))
+                plt.rcParams['figure.figsize'] = (10, 6)
+
+                fig, ax = plt.subplots()
+                plt.axhline(mmr, 0, 1, color='blue')
+                plt.axvline(pick, 0, 1, color='blue')
+                plt.axvline(pick * 2, 0, 1, linestyle='--', color='crimson')
+                for x, y, image_path, characterName in zip(wgraphData.x, wgraphData.y, wgraphData.image, wgraphData.characterName):
+                    if ax is None:
+                        ax = plt.gca()
+                    try:
+                        image = plt.imread(image_path)
+                    except TypeError:
+                        pass
+                    im = OffsetImage(image, zoom=0.2)
+                    x, y = np.atleast_1d(x, y)
+                    artists = []
+                    for x0, y0 in zip(x, y):
+                        ab = AnnotationBbox(im, (x0, y0), xycoords='data', frameon=False)
+                        artists.append(ax.add_artist(ab))
+                    ax.update_datalim(np.column_stack([x, y]))
+                    ax.autoscale()
+                    # ax.annotate(characterName, (x, y), textcoords="offset points", xytext=(0, -25), ha='center') # 텍스트 출력
+                plt.title(f'Season8(0.75a patch) 무기군<{w}>(스쿼드, 랭크) 사분면', fontsize=20)
+                plt.xlabel('픽률', fontsize=20)
+                plt.ylabel('평균 MMR 획득', fontsize=20)
+                plt.show()
+        except:
+            self.classifyMsg = w + '은(는) 존재하지 않는 무기군입니다.'
 
 
 ########################################################################################################################
@@ -679,7 +746,7 @@ def weapon_3():
             pc.heading("Season8 무기군 분류"),
             pc.image(src='weapon_default.png'),
             pc.box(""),
-            pc.box("무기군 검색"),
+            # pc.box("무기군 검색"),
             pc.hstack(
                 pc.text("사용무기"),
                 pc.input(
