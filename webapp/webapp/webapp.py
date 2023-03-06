@@ -607,7 +607,6 @@ def index_0():
         pc.vstack(
             pc.heading("ER 웹 크롤링 및 데이터 분석"),
             # pc.box("Progress: editing ", pc.code(filename, font_size="1em")),
-            pc.image(src='./index.png'),
             pc.hstack(
                 pc.link(
                     "스쿼드",
@@ -636,7 +635,8 @@ def index_0():
                 background='red',
                 width='6em',
                 align='middle'
-            )
+            ),
+            pc.image(src='./index.png')
         ),
     )
 
@@ -650,18 +650,17 @@ def squad_1():
     return pc.center(
         pc.vstack(
             pc.heading("Season8 스쿼드(랭크) 사분면"),
-            pc.image(src='./squad_default.png'),
-            pc.box(""),
+            pc.box(" "),
             pc.hstack(
                 pc.link(
                     "Scatter",
-                    href='#',
+                    href='',
                     on_click=State.squad_1_1,
                     background_image="linear-gradient(144deg,#AF40FF,#5B42F3 50%,#00DDEB)"
                 ),
                 pc.link(
                     "Profile",
-                    href='#',
+                    href='',
                     on_click=State.squad_1_2,
                     background_image="linear-gradient(144deg,#AF40FF,#5B42F3 50%,#00DDEB)"
                 ),
@@ -670,7 +669,8 @@ def squad_1():
                     href='/',
                     background='red'
                 )
-            )
+            ),
+            pc.image(src='./squad_default.png', max_height='30em', max_width='30em')
         )
     )
 
@@ -685,7 +685,6 @@ def character_2():
         pc.vstack(
             pc.heading("Season8 실험체 검색"),
             # pc.image(src='./character_default.png'),
-            pc.image(src=State.searchImg),
             pc.box("실험체 정보"),
             pc.hstack(
                 pc.text("실험체명"),
@@ -703,7 +702,7 @@ def character_2():
                     width="160px"
                 )
             ),
-            pc.box(""),
+            pc.box(" "),
             pc.table_container(
                 pc.table(
                     pc.thead(
@@ -726,12 +725,12 @@ def character_2():
                     width="700px"
                 ),
             ),
-            pc.box(""),
+            pc.box(" "),
             pc.text(State.searchMsg),
             pc.hstack(
                 pc.link(
                     "Search",
-                    href='#',
+                    href='',
                     on_click=State.character_2_2,
                     background_image="linear-gradient(144deg,#AF40FF,#5B42F3 50%,#00DDEB)"
                 ),
@@ -740,7 +739,8 @@ def character_2():
                     href='/',
                     background='red'
                 )
-            )
+            ),
+            pc.image(src=State.searchImg, max_height='30em', max_width='30em')
         )
     )
 
@@ -754,8 +754,7 @@ def weapon_3():
     return pc.center(
         pc.vstack(
             pc.heading("Season8 무기군 분류"),
-            pc.image(src='weapon_default.png'),
-            pc.box(""),
+            pc.box(" "),
             # pc.box("무기군 검색"),
             pc.hstack(
                 pc.text("사용무기"),
@@ -765,24 +764,24 @@ def weapon_3():
                     width="160px"
                 )
             ),
-            pc.box(""),
+            pc.box(" "),
             pc.text(State.classifyMsg),
             pc.hstack(
                 pc.link(
                     "Scatter 1",
-                    href='#',
+                    href='',
                     on_click=State.weapon_3_1,
                     background_image="linear-gradient(144deg,#AF40FF,#5B42F3 50%,#00DDEB)"
                 ),
                 pc.link(
                     "Scatter 2",
-                    href='#',
+                    href='',
                     on_click=State.weapon_3_2_1,
                     background_image="linear-gradient(144deg,#AF40FF,#5B42F3 50%,#00DDEB)"
                 ),
                 pc.link(
                     "Profile",
-                    href='#',
+                    href='',
                     on_click=State.weapon_3_2_2,
                     background_image="linear-gradient(144deg,#AF40FF,#5B42F3 50%,#00DDEB)"
                 ),
@@ -791,7 +790,9 @@ def weapon_3():
                     href='/',
                     background='red'
                 )
-            )
+            ),
+            pc.box(" "),
+            pc.image(src='weapon_default.png', max_height='30em', max_width='30em')
         )
     )
 
@@ -806,9 +807,9 @@ def fin_4():
         pc.vstack(
             pc.heading("<Season8 0.75a patch 요약>"),
             pc.image(src='./mostItem/metaGolem-half.png'),
-            pc.box(""),
+            pc.box(" "),
             pc.heading('※ 가장 많이 사용된 실험체 & 스킨 및 부위별 아이템', font_size='1.3em'),
-            pc.box(""),
+            pc.box(" "),
             # pc.box(f'실험체(스킨): {characterNamesKr[characterNamesKr.code == rank_final.characterNum.value_counts().head(1).index[0]].name.values[0]}({skinNames[skinNames.code == rank_final[rank_final.characterNum == rank_final.characterNum.value_counts().head(1).index[0]].skinCode.values[0]].values[0][0]})'),
             # pc.box(f'무기: {weaponNames[weaponNames.code == int(rank_final["equipFirstItemForLog.0"].value_counts().head(1).index[0][1:-1])].name.values[0]}, 옷: {armorNames[armorNames.code == int(rank_final["equipFirstItemForLog.1"].value_counts().head(1).index[0][1:-1])].name.values[0]}'),
             # pc.box(f'머리: {armorNames[armorNames.code == int(rank_final["equipFirstItemForLog.2"].value_counts().head(1).index[0][1:-1])].name.values[0]}, 팔: {armorNames[armorNames.code == int(rank_final["equipFirstItemForLog.3"].value_counts().head(1).index[0][1:-1])].name.values[0]}'),
@@ -848,7 +849,7 @@ def fin_4():
                     width="700px"
                 ),
             ),
-            pc.box(""),
+            pc.box(" "),
             pc.hstack(
                 pc.link(
                     "Home",
